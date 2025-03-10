@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import toast from "react-hot-toast";
 import { AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -72,7 +71,7 @@ const Survey = () => {
       if (res.status === 200) {
         toast.success("Patient Details Registered Successfully");
         setPatient(patientDetails);
-        // resetForm();
+        resetForm();
       }
       console.log(patient)
       if (patient) {
