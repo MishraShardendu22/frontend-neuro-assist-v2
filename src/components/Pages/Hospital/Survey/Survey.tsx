@@ -64,64 +64,44 @@ const Survey = () => {
     }));
   };
 
-  const handleSubmit = async () => {
-    try {
-      console.log("Submitting patient details:", patientDetails);
-      const res = await axiosInstance.post("/patient/register", patientDetails);
-      if (res.status === 200) {
-        toast.success("Patient Details Registered Successfully");
-        setPatient(patientDetails);
-        resetForm();
-      }
-      console.log(patient)
-      if (patient) {
-        const lastKnownNormalDate = new Date(patient.patientLastKnownNormal);
-        const twentyFourHoursAgo = new Date();
-        twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+const handleSubmit = async () => {
+  try {
+    console.log("Submitting patient details:", patientDetails);
+    const res = await axiosInstance.post("/patient/register", patientDetails);
+    
+    if (res.status === 200) {
+      toast.success("Patient Details Registered Successfully");
+      setPatient(patientDetails); // Sync Zustand store
 
-        if (lastKnownNormalDate < twentyFourHoursAgo) {
-          navigate("/patient/generalAssessment");
-        } else {
-          if(patient && !patient.symptoms.Weakness && !patient.symptoms.Numbness && !patient.symptoms.FacialDroop && !patient.symptoms.LossOfBalance && !patient.symptoms.SpeechDifficulties && !patient.symptoms.SuddenVisionChanges){
-            navigate("/patient/thrombectomy");
-          }else{
-            navigate("/patient/thrombolysis");
+      // Ensure the state is updated before using it
+      setTimeout(() => {
+        if (patient) {
+          const lastKnownNormalDate = new Date(patient.patientLastKnownNormal);
+          const twentyFourHoursAgo = new Date();
+          twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+
+          if (lastKnownNormalDate < twentyFourHoursAgo) {
+            navigate("/patient/generalAssessment");
+          } else {
+            if (!Object.values(patient.symptoms).includes(true)) {
+              navigate("/patient/thrombectomy");
+            } else {
+              navigate("/patient/thrombolysis");
+            }
           }
         }
-      }
-    } catch (error) {
-      toast.error("Error registering patient details");
-      console.error("Submission error:", error);
+      }, 100);
     }
-  };
+  } catch (error) {
+    toast.error("Error registering patient details");
+    console.error("Submission error:", error);
+  }
+};
 
-  const resetForm = () => {
-    setPatientDetails({
-      patientDOB: "",
-      patientEmail: "",
-      patientWeight: "",
-      patientMedicalHistory: "",
-      patientLastKnownNormal: "",
-      vitalSigns: {
-        BP: "",
-        HeartRate: "",
-        Temperature: "",
-        OxygenSaturation: "",
-      },
-      symptoms: {
-        Weakness: false,
-        Numbness: false,
-        FacialDroop: false,
-        LossOfBalance: false,
-        SpeechDifficulties: false,
-        SuddenVisionChanges: false,
-      },
-    });
-  };
+useEffect(() => {
+  console.log("Updated Zustand Patient State:", patient);
+}, [patient]);
 
-  useEffect(() => {
-    console.log("Updated Zustand Patient State:", patient);
-  }, [patient]);
 
   return (
     <div className="min-h-screen bg-background py-8">
