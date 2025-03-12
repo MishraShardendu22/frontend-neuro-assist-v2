@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertCircle, CheckCircle, ArrowLeft, ArrowRight } from "lucide-react";
