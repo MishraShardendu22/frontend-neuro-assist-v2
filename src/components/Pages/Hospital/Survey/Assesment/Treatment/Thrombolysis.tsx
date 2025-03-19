@@ -1,7 +1,7 @@
 const Thrombolysis = () => {
   return (
     <div>
-      Thrombolysis
+      Thrombolysis Page
     </div>
   )
 }
