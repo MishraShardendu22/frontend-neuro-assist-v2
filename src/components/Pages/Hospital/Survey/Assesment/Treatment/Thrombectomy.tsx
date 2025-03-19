@@ -23,9 +23,10 @@ import {
   File, 
   X, 
   AlertTriangle, 
-  Send
+  Send,
+  ChevronRight
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Thrombectomy = () => {
   const patient = PatientStore((state) => state.patient);
@@ -70,7 +71,7 @@ const Thrombectomy = () => {
       toast.success("Document sent successfully");
       setDocumentName("");
 
-      navigate("/patient/sendAnalysis")
+      navigate("/patient/allReports")
     } catch (error) {
       console.error(error);
       toast.error("Failed to send document");
@@ -97,92 +98,109 @@ const Thrombectomy = () => {
   };
 
   return (
-    <Card className="max-w-3xl mx-auto border-t-4 border-t-primary shadow-lg">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-2xl text-primary flex items-center gap-2">
-          <File className="h-6 w-6" />
-          Thrombectomy Document Upload
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="space-y-6">
-        {!patientEmail && (
-          <Alert variant="destructive" className="border border-destructive/20 bg-destructive/10">
-            <AlertTriangle className="h-5 w-5 text-destructive" />
-            <AlertDescription className="ml-2 text-destructive-foreground">
-              No patient selected. Please select a patient before uploading documents.
-            </AlertDescription>
-          </Alert>
-        )}
-        
-        <div className="space-y-4">
-          <div className="flex flex-col md:flex-row md:items-end gap-4">
-            <div className="flex-1">
-              <label htmlFor="documentName" className="text-sm font-medium text-foreground mb-1 block">
-                Document Name
-              </label>
-              <Input
-                id="documentName"
-                placeholder="Enter document name"
-                value={documentName}
-                onChange={(e) => setDocumentName(e.target.value)}
-                className="bg-input text-foreground border-input focus:ring-ring focus:border-ring"
-              />
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={openFilePicker}
-              className="flex items-center gap-2 h-10 whitespace-nowrap border-input text-foreground hover:bg-accent hover:text-accent-foreground"
-            >
-              <Upload className="h-4 w-4" />
-              Upload File
-            </Button>
-          </div>
-          
-          {documentUrl && (
-            <div className="flex items-center p-3 bg-accent/20 border border-accent/50 rounded-md">
-              <Badge className="bg-accent text-accent-foreground hover:bg-accent/80 mr-2 py-1">
-                File
-              </Badge>
-              <span className="text-sm text-foreground flex-1 truncate">{documentName}</span>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => {setDocumentUrl(""); setDocumentName("");}}
-                className="text-destructive hover:text-destructive-foreground hover:bg-destructive/10 rounded-full p-1 h-8 w-8"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+    <div className="px-4 py-6">
+      <Card className="max-w-3xl mx-auto border-t-4 border-t-blue-600 shadow-lg rounded-lg overflow-hidden">
+        <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-white">
+          <CardTitle className="text-2xl text-blue-700 flex items-center gap-2">
+            <File className="h-6 w-6 text-blue-600" />
+            Thrombectomy Document Upload
+          </CardTitle>
+          {patientEmail && (
+            <div className="flex items-center text-sm text-gray-600 mt-1">
+              <span className="font-medium mr-2">Patient:</span>
+              <span className="text-blue-600">{patientEmail}</span>
             </div>
           )}
-        </div>
-      </CardContent>
-
-      <CardFooter className="flex justify-end border-t border-border pt-4">
-        <form onSubmit={sendDocument} className="w-full">
-          <div className="flex justify-end">
-            <Button 
-              type="submit" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2"
-              disabled={!documentUrl || !documentName}
-            >
-              <Send className="h-4 w-4" />
-              Send Document
-            </Button>
+        </CardHeader>
+        
+        <CardContent className="space-y-6 p-6">
+          {!patientEmail && (
+            <Alert variant="destructive" className="border border-red-200 bg-red-50 text-red-800 rounded-lg">
+              <AlertTriangle className="h-5 w-5 text-red-600" />
+              <AlertDescription className="ml-2 text-red-700">
+                No patient selected. Please select a patient before uploading documents.
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          <div className="space-y-4">
+            <div className="flex flex-col md:flex-row md:items-end gap-4">
+              <div className="flex-1">
+                <label htmlFor="documentName" className="text-sm font-medium text-gray-700 mb-1 block">
+                  Document Name
+                </label>
+                <Input
+                  id="documentName"
+                  placeholder="Enter document name"
+                  value={documentName}
+                  onChange={(e) => setDocumentName(e.target.value)}
+                  className="bg-white text-gray-800 border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                />
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={openFilePicker}
+                className="flex items-center gap-2 h-10 whitespace-nowrap border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-sm"
+              >
+                <Upload className="h-4 w-4" />
+                Upload File
+              </Button>
+            </div>
+            
+            {documentUrl && (
+              <div className="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 mr-2 py-1">
+                  File
+                </Badge>
+                <span className="text-sm text-gray-800 flex-1 truncate">{documentName}</span>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => {setDocumentUrl(""); setDocumentName("");}}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full p-1 h-8 w-8"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
-        </form>
-      </CardFooter>
-      
-      {isPickerOverlayVisible && (
-        <PickerOverlay
-          apikey={import.meta.env.VITE_FILESTACK_API_KEY as string}
-          onError={onError}
-          onSuccess={onSuccess}
-          pickerOptions={options}
-        />
-      )}
-    </Card>
+        </CardContent>
+
+        <CardFooter className="flex justify-end border-t border-gray-200 pt-4 px-6 pb-6 bg-gray-50">
+          <form onSubmit={sendDocument} className="w-full">
+            <div className="flex justify-end">
+              <Button 
+                type="submit" 
+                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 shadow-md"
+                disabled={!documentUrl || !documentName}
+              >
+                <Send className="h-4 w-4" />
+                Send Document
+              </Button>
+            </div>
+          </form>
+        </CardFooter>
+        
+        {isPickerOverlayVisible && (
+          <PickerOverlay
+            apikey={import.meta.env.VITE_FILESTACK_API_KEY as string}
+            onError={onError}
+            onSuccess={onSuccess}
+            pickerOptions={options}
+          />
+        )}
+      </Card>
+
+      <div className="max-w-3xl mx-auto mt-6 flex justify-end">
+        <Link to="/patient/allReports">
+          <Button className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2 shadow-md">
+            Next
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
+    </div>
   );
 };
 

@@ -8,6 +8,7 @@ import Thrombolysis from "./components/Pages/Hospital/Survey/Assesment/Treatment
 import Thrombectomy from "./components/Pages/Hospital/Survey/Assesment/Treatment/Thrombectomy";
 import { GeneralAssesment } from "./components/Pages/Hospital/Survey/Assesment/general.assesment";
 import AutomatedCTReportAnalysis from "./components/Pages/Hospital/Survey/Assesment/Analysis";
+import AnalyseReport from "./components/Pages/Hospital/Survey/Assesment/AnalyseReport";
 
 const App = () => {
   return (
@@ -17,8 +18,9 @@ const App = () => {
         <Route path="/patient/survey" element={<Survey />} />
         <Route path="/patient/thrombectomy" element={<Thrombectomy />} />
         <Route path="/patient/thrombolysis" element={<Thrombolysis />} />
+        <Route path="/patient/sendAnalysis" element={<AnalyseReport />} />
         <Route path="/patient/generalAssessment" element={<GeneralAssesment />} />
-        <Route path="/patient/sendAnalysis" element={<AutomatedCTReportAnalysis />} />
+        <Route path="/patient/allReports" element={<AutomatedCTReportAnalysis />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Theme />

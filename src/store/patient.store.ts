@@ -12,3 +12,4 @@ export const PatientStore = create<PatientStoreState>((set) => ({
   setPatient: (patient) => set(() => ({ patient })),
   resetPatient: () => set(() => ({ patient: null })),
 }));
+
