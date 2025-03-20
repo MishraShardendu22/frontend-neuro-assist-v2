@@ -105,48 +105,55 @@ const Survey = () => {
     });
   };
 
-  const handleSubmit = async () => {
-    try {
-      console.log("Submitting patient details:", patientDetails);
-      const res = await axiosInstance.post("/patient/register", patientDetails);
+const handleSubmit = async () => {
+  try {
+    console.log("Submitting patient details:", patientDetails);
+    const res = await axiosInstance.post("/patient/register", patientDetails);
 
-      if (res.status === 200) {
-        toast.success("Patient Details Registered Successfully");
-        setPatient(patientDetails);
+    if (res.status === 200) {
+      toast.success("Patient Details Registered Successfully");
+      setPatient(patientDetails);
 
-        const lastKnownNormalDate = new Date(patientDetails.patientLastKnownNormal);
-        const twentyFourHoursAgo = new Date();
-        twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+      const lastKnownNormalDate = new Date(patientDetails.patientLastKnownNormal);
+      if (isNaN(lastKnownNormalDate.getTime())) {
+        toast.error("Invalid date format for last known normal time.");
+        return;
+      }
 
-        if(!(
-          patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.pradaxa ||
-          patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.xarelto ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.apixaban ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.coumadin ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.edoxaban ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.therapeuticLovenox ||
-            patientDetails.exclusionList.gastrointestinalBleedLast21Days || 
-            patientDetails.exclusionList.historyIntracranialHemorrhage || 
-            patientDetails.exclusionList.intracranialIntraspinalSurgeryLast3Months
-          )){
-            navigate("/patient/NoStroke");
-          }
+      const twentyFourHoursAgo = new Date();
+      twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
 
-        if (lastKnownNormalDate < twentyFourHoursAgo) {
-          navigate("/patient/generalAssessment");
+      if (!(
+        patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.pradaxa ||
+        patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.xarelto ||
+        patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.apixaban ||
+        patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.coumadin ||
+        patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.edoxaban ||
+        patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.therapeuticLovenox ||
+        patientDetails.exclusionList.gastrointestinalBleedLast21Days || 
+        patientDetails.exclusionList.historyIntracranialHemorrhage || 
+        patientDetails.exclusionList.intracranialIntraspinalSurgeryLast3Months
+      )) {
+        navigate("/patient/NoStroke");
+        return;
+      }
+
+      if (lastKnownNormalDate < twentyFourHoursAgo) {
+        navigate("/patient/generalAssessment");
+      } else {
+        if (!Object.values(patientDetails.symptoms).includes(true)) {
+          navigate("/patient/thrombectomy");
         } else {
-          if (!Object.values(patientDetails.symptoms).includes(true)) {
-            navigate("/patient/thrombectomy");
-          } else {
-            navigate("/patient/thrombolysis");
-          }
+          navigate("/patient/thrombolysis");
         }
       }
-    } catch (error) {
-      toast.error("Error registering patient details");
-      console.error("Submission error:", error);
     }
-  };
+  } catch (error) {
+    toast.error("Error registering patient details");
+    console.error("Submission error:", error);
+  }
+};
+
 
   useEffect(() => {
     console.log("Updated patient details:", patientDetails);
