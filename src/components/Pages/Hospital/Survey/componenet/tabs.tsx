@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { AlertCircle, Heart, User } from "lucide-react";
+import { AlertCircle, FormInputIcon, Heart, User } from "lucide-react";
 
 interface TabsNavigationProps {
   activeTab: string;
@@ -11,36 +11,41 @@ const TabsNavigation = ({ activeTab, setActiveTab }: TabsNavigationProps) => {
     {
       id: "personal",
       label: "Patient Details",
-      icon: <User className="h-4 w-4" />
+      icon: <User className="h-5 w-5" />
     },
     {
       id: "vitals",
       label: "Vital Signs",
-      icon: <Heart className="h-4 w-4" />
+      icon: <Heart className="h-5 w-5" />
+    },
+    {
+      id: "exclusion",
+      label: "Exclusion",
+      icon: <FormInputIcon className="h-5 w-5" />
     },
     {
       id: "symptoms",
       label: "Symptoms",
-      icon: <AlertCircle className="h-4 w-4" />
-    }
+      icon: <AlertCircle className="h-5 w-5" />
+    },
   ];
 
   return (
     <div className="flex items-center justify-center my-6">
-      <div className="bg-muted rounded-lg p-1 flex w-full max-w-md">
+      <div className="bg-muted rounded-lg p-2 flex w-full max-w-lg shadow-md">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             className={cn(
-              "flex items-center justify-center gap-2 flex-1 text-sm font-medium rounded-md py-2 px-3 transition-all",
+              "flex flex-col items-center justify-center gap-1 flex-1 text-sm font-medium rounded-md py-3 px-4 transition-all",
               activeTab === tab.id 
-                ? "bg-background text-foreground shadow-sm" 
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-background text-foreground shadow-md scale-105" 
+                : "text-muted-foreground hover:text-foreground hover:bg-gray-100"
             )}
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.icon}
-            <span className="hidden sm:inline">{tab.label}</span>
+            <span className="text-xs sm:text-sm font-semibold">{tab.label}</span>
           </button>
         ))}
       </div>

@@ -1,19 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import toast from "react-hot-toast";
 import { AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
-import TabsNavigation from "./componenet/tabs";
 import { useNavigate } from "react-router-dom";
-import VitalSignsForm from "./componenet/vital";
 import axiosInstance from "@/lib/axiosInstance";
-import SymptomsForm from "./componenet/symptoms";
 import { CardContent } from "@/components/ui/card";
 import { PatientStore } from "@/store/patient.store";
 import { PatientDetailsType } from "@/Types/Patient.types";
+import TabsNavigation from "./componenet/tabs";
 import PatientDetailsForm from "./componenet/patientdetails";
+import VitalSignsForm from "./componenet/vital";
+import ExclusionForm from "./componenet/ExclusionForm";
+import SymptomsForm from "./componenet/symptoms";
 
 const Survey = () => {
   const navigate = useNavigate();
-  const { setPatient, patient } = PatientStore();
+  const { setPatient } = PatientStore();
   const [activeTab, setActiveTab] = useState("personal");
   const [patientDetails, setPatientDetails] = useState<PatientDetailsType>({
     patientDOB: "",
@@ -35,6 +37,19 @@ const Survey = () => {
       SpeechDifficulties: false,
       SuddenVisionChanges: false,
     },
+    exclusionList: {
+      anticoagulantMedicationsLast48Hours: {
+        pradaxa: false,
+        xarelto: false,
+        coumadin: false,
+        apixaban: false,
+        edoxaban: false,
+        therapeuticLovenox: false,
+      },
+      historyIntracranialHemorrhage: false,
+      gastrointestinalBleedLast21Days: false,
+      intracranialIntraspinalSurgeryLast3Months: false,
+    }
   });
 
   const handleVitalSignsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,44 +79,78 @@ const Survey = () => {
     }));
   };
 
-const handleSubmit = async () => {
-  try {
-    console.log("Submitting patient details:", patientDetails);
-    const res = await axiosInstance.post("/patient/register", patientDetails);
-    
-    if (res.status === 200) {
-      toast.success("Patient Details Registered Successfully");
-      setPatient(patientDetails); // Sync Zustand store
+  const handleExclusionCheckboxChange = (key: string, checked: boolean) => {
+    setPatientDetails((prevDetails: any) => {
+      if (key.includes(".")) {
+        const [parentKey, childKey] = key.split(".");
+        return {
+          ...prevDetails,
+          exclusionList: {
+            ...prevDetails.exclusionList,
+            [parentKey]: {
+              ...prevDetails.exclusionList[parentKey],
+              [childKey]: checked,
+            },
+          },
+        };
+      } else {
+        return {
+          ...prevDetails,
+          exclusionList: {
+            ...prevDetails.exclusionList,
+            [key]: checked,
+          },
+        };
+      }
+    });
+  };
 
-      // Ensure the state is updated before using it
-      setTimeout(() => {
-        if (patient) {
-          const lastKnownNormalDate = new Date(patient.patientLastKnownNormal);
-          const twentyFourHoursAgo = new Date();
-          twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+  const handleSubmit = async () => {
+    try {
+      console.log("Submitting patient details:", patientDetails);
+      const res = await axiosInstance.post("/patient/register", patientDetails);
 
-          if (lastKnownNormalDate < twentyFourHoursAgo) {
-            navigate("/patient/generalAssessment");
+      if (res.status === 200) {
+        toast.success("Patient Details Registered Successfully");
+        setPatient(patientDetails);
+
+        const lastKnownNormalDate = new Date(patientDetails.patientLastKnownNormal);
+        const twentyFourHoursAgo = new Date();
+        twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+
+        if(!(
+          patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.pradaxa ||
+          patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.xarelto ||
+            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.apixaban ||
+            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.coumadin ||
+            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.edoxaban ||
+            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours.therapeuticLovenox ||
+            patientDetails.exclusionList.gastrointestinalBleedLast21Days || 
+            patientDetails.exclusionList.historyIntracranialHemorrhage || 
+            patientDetails.exclusionList.intracranialIntraspinalSurgeryLast3Months
+          )){
+            navigate("/patient/NoStroke");
+          }
+
+        if (lastKnownNormalDate < twentyFourHoursAgo) {
+          navigate("/patient/generalAssessment");
+        } else {
+          if (!Object.values(patientDetails.symptoms).includes(true)) {
+            navigate("/patient/thrombectomy");
           } else {
-            if (!Object.values(patient.symptoms).includes(true)) {
-              navigate("/patient/thrombectomy");
-            } else {
-              navigate("/patient/thrombolysis");
-            }
+            navigate("/patient/thrombolysis");
           }
         }
-      }, 100);
+      }
+    } catch (error) {
+      toast.error("Error registering patient details");
+      console.error("Submission error:", error);
     }
-  } catch (error) {
-    toast.error("Error registering patient details");
-    console.error("Submission error:", error);
-  }
-};
+  };
 
-useEffect(() => {
-  console.log("Updated Zustand Patient State:", patient);
-}, [patient]);
-
+  useEffect(() => {
+    console.log("Updated patient details:", patientDetails);
+  }, [patientDetails]);
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -118,13 +167,35 @@ useEffect(() => {
 
         <div className="mt-6">
           {activeTab === "personal" && (
-            <PatientDetailsForm patientDetails={patientDetails} handleChange={handleChange} nextTab={() => setActiveTab("vitals")} />
+            <PatientDetailsForm
+              patientDetails={patientDetails}
+              handleChange={handleChange}
+              nextTab={() => setActiveTab("vitals")}
+            />
           )}
           {activeTab === "vitals" && (
-            <VitalSignsForm patientDetails={patientDetails} handleVitalSignsChange={handleVitalSignsChange} nextTab={() => setActiveTab("symptoms")} prevTab={() => setActiveTab("personal")} />
+            <VitalSignsForm
+              patientDetails={patientDetails}
+              handleVitalSignsChange={handleVitalSignsChange}
+              nextTab={() => setActiveTab("exclusion")}
+              prevTab={() => setActiveTab("personal")}
+            />
+          )}
+          {activeTab === "exclusion" && (
+            <ExclusionForm
+              patientDetails={patientDetails}
+              handleCheckboxChange={handleExclusionCheckboxChange}
+              nextTab={() => setActiveTab("symptoms")}
+              prevTab={() => setActiveTab("vitals")}
+            />
           )}
           {activeTab === "symptoms" && (
-            <SymptomsForm patientDetails={patientDetails} handleCheckboxChange={handleCheckboxChange} prevTab={() => setActiveTab("vitals")} handleSubmit={handleSubmit} />
+            <SymptomsForm
+              patientDetails={patientDetails}
+              handleCheckboxChange={handleCheckboxChange}
+              prevTab={() => setActiveTab("exclusion")}
+              handleSubmit={handleSubmit}
+            />
           )}
         </div>
       </CardContent>

@@ -58,7 +58,6 @@ const VitalSignsForm: React.FC<VitalSignsFormProps> = ({
     }
   };
   
-  // Function to render appropriate badge based on status
   const renderStatusBadge = (status: string | null) => {
     if (!status) return null;
     
