@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -31,10 +31,7 @@ interface ThrombectomyProps {
   handleSubmit?: () => void;
 }
 
-const UploadComponent: React.FC<ThrombectomyProps> = ({
-  nextTab,
-  prevTab,
-}) => {
+const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
   const patient = PatientStore((state) => state.patient);
   const patientEmail = patient?.patientEmail;
 
@@ -73,15 +70,13 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({
       );
       return;
     }
-    
+
     try {
-      await axiosInstance.put("/patient/sendDocument", 
-        {
-          documentUrl,
-          patientEmail,
-          documentName,
-        }
-      );
+      await axiosInstance.put("/patient/sendDocument", {
+        documentUrl,
+        patientEmail,
+        documentName,
+      });
 
       console.log(documentUrl);
       console.log(documentName);
@@ -117,16 +112,16 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({
 
   return (
     <div className="px-4 py-6">
-      <Card className="max-w-3xl mx-auto border-t-4 border-t-blue-600 shadow-lg rounded-lg overflow-hidden">
-        <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-white">
-          <CardTitle className="text-2xl text-blue-700 flex items-center gap-2">
-            <File className="h-6 w-6 text-blue-600" />
-            Document Upload
+      <Card className="w-full max-w-4xl mx-auto border-t-4 border-t-primary shadow-lg rounded-lg overflow-hidden dark:bg-card dark:border-t-primary/80">
+        <CardHeader className="pb-3 bg-gradient-to-r from-primary/10 to-background dark:from-primary/20 dark:to-background/20">
+          <CardTitle className="text-2xl text-primary flex items-center gap-2">
+            <File className="h-6 w-6 text-primary" />
+            CTA and CT Upload
           </CardTitle>
           {patientEmail && (
-            <div className="flex items-center text-sm text-gray-600 mt-1">
+            <div className="flex items-center text-sm text-muted-foreground mt-1">
               <span className="font-medium mr-2">Patient:</span>
-              <span className="text-blue-600">{patientEmail}</span>
+              <span className="text-primary">{patientEmail}</span>
             </div>
           )}
         </CardHeader>
@@ -135,10 +130,10 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({
           {!patientEmail && (
             <Alert
               variant="destructive"
-              className="border border-red-200 bg-red-50 text-red-800 rounded-lg"
+              className="border border-destructive/20 bg-destructive/10 text-destructive rounded-lg"
             >
-              <AlertTriangle className="h-5 w-5 text-red-600" />
-              <AlertDescription className="ml-2 text-red-700">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDescription className="ml-2">
                 No patient selected. Please select a patient before uploading
                 documents.
               </AlertDescription>
@@ -150,7 +145,7 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({
               <div className="flex-1">
                 <label
                   htmlFor="documentName"
-                  className="text-sm font-medium text-gray-700 mb-1 block"
+                  className="text-sm font-medium text-foreground mb-1 block"
                 >
                   Document Name
                 </label>
@@ -159,14 +154,14 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({
                   placeholder="Enter document name"
                   value={documentName}
                   onChange={(e) => setDocumentName(e.target.value)}
-                  className="bg-white text-gray-800 border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                  className="bg-background text-foreground border-border focus:ring-primary/50 focus:border-primary"
                 />
               </div>
               <Button
                 type="button"
                 variant="outline"
                 onClick={openFilePicker}
-                className="flex items-center gap-2 h-10 whitespace-nowrap border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-sm"
+                className="flex items-center gap-2 h-10 whitespace-nowrap border-border text-foreground hover:bg-accent hover:text-accent-foreground"
               >
                 <Upload className="h-4 w-4" />
                 Upload File
@@ -174,11 +169,11 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({
             </div>
 
             {documentUrl && (
-              <div className="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-md">
-                <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 mr-2 py-1">
+              <div className="flex items-center p-3 bg-accent/20 border border-border rounded-md">
+                <Badge className="bg-accent text-accent-foreground hover:bg-accent/80 mr-2 py-1">
                   File
                 </Badge>
-                <span className="text-sm text-gray-800 flex-1 truncate">
+                <span className="text-sm text-foreground flex-1 truncate">
                   {documentName}
                 </span>
                 <Button
@@ -188,7 +183,7 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({
                     setDocumentUrl("");
                     setDocumentName("");
                   }}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full p-1 h-8 w-8"
+                  className="text-destructive hover:text-destructive/80 hover:bg-destructive/10 rounded-full p-1 h-8 w-8"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -197,35 +192,43 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({
           </div>
         </CardContent>
 
-        <CardFooter className="flex justify-between border-t border-gray-200 pt-4 px-6 pb-6 bg-gray-50">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={prevTab}
-            className="flex items-center gap-2"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Back
-          </Button>
-          <form onSubmit={sendDocument} className="flex items-center gap-2">
-            <Button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 shadow-md"
-              disabled={!documentUrl || !documentName}
-            >
-              <Send className="h-4 w-4" />
-              Send Document
-            </Button>
+        <CardFooter className="flex flex-col sm:flex-row justify-between border-t border-border pt-4 px-6 pb-6 bg-muted/30">
+          <div className="flex w-full justify-between items-center space-x-4">
             <Button
               type="button"
               variant="outline"
-              onClick={nextTab}
-              className="flex items-center gap-2"
+              onClick={prevTab}
+              className="flex items-center gap-2 w-full sm:w-auto"
             >
-              Next
-              <ChevronRight className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" />
+              Back
             </Button>
-          </form>
+
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <form
+                onSubmit={sendDocument}
+                className="flex flex-col sm:flex-row items-center gap-2 w-full"
+              >
+                <Button
+                  type="submit"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 shadow-md w-full sm:w-auto mb-2 sm:mb-0"
+                  disabled={!documentUrl || !documentName}
+                >
+                  <Send className="h-4 w-4" />
+                  Send Document
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={nextTab}
+                  className="flex items-center gap-2 w-full sm:w-auto"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </form>
+            </div>
+          </div>
         </CardFooter>
 
         {isPickerOverlayVisible && (

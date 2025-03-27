@@ -14,14 +14,16 @@ const NotFound = () => {
         transition={{ duration: 0.5 }}
         className="relative text-center"
       >
-        <h1 className="text-8xl md:text-9xl font-bold text-muted/20">404</h1>
+        <h1 className="text-8xl md:text-9xl font-bold text-primary">404</h1>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
           className="mt-4"
         >
-          <h2 className="text-primary text-4xl md:text-5xl font-bold">Page Not Found</h2>
+          <h2 className="text-primary text-4xl md:text-5xl font-bold">
+            Page Not Found
+          </h2>
         </motion.div>
       </motion.div>
 
@@ -40,7 +42,12 @@ const NotFound = () => {
         transition={{ delay: 0.3, duration: 0.5 }}
         className="my-8"
       >
-        <svg width="200" height="120" viewBox="0 0 200 120" className="text-primary">
+        <svg
+          width="200"
+          height="120"
+          viewBox="0 0 200 120"
+          className="text-primary"
+        >
           <motion.path
             d="M10,90 Q50,40 90,90 T170,90"
             fill="none"
@@ -48,7 +55,7 @@ const NotFound = () => {
             strokeWidth="3"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ delay: 0.8, duration: 1.5, ease: 'easeInOut' }}
+            transition={{ delay: 0.8, duration: 1.5, ease: "easeInOut" }}
           />
           <motion.circle
             cx="170"
@@ -80,10 +87,10 @@ const NotFound = () => {
         <Button
           variant="default"
           className="gap-2 hover:scale-105 transition-transform"
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
         >
           <motion.span
-            whileHover={{ scale: 1.2, color: '#F472B6' }}
+            whileHover={{ scale: 1.2, color: "#F472B6" }}
             transition={{ duration: 0.3 }}
             className="inline-block"
           >
@@ -94,10 +101,10 @@ const NotFound = () => {
         <Button
           variant="outline"
           className="gap-2 hover:scale-105 transition-transform"
-          onClick={() => navigate('/login')}
+          onClick={() => navigate("/login")}
         >
           <motion.span
-            whileHover={{ scale: 1.2, color: '#F472B6' }}
+            whileHover={{ scale: 1.2, color: "#F472B6" }}
             transition={{ duration: 0.3 }}
             className="inline-block"
           >
@@ -108,10 +115,10 @@ const NotFound = () => {
         <Button
           variant="secondary"
           className="gap-2 hover:scale-105 transition-transform"
-          onClick={() => navigate('/register')}
+          onClick={() => navigate("/register")}
         >
           <motion.span
-            whileHover={{ scale: 1.2, color: '#F472B6' }}
+            whileHover={{ scale: 1.2, color: "#F472B6" }}
             transition={{ duration: 0.3 }}
             className="inline-block"
           >
@@ -133,7 +140,7 @@ const NotFound = () => {
           className="text-muted-foreground gap-2 hover:scale-105 transition-transform"
         >
           <motion.span
-            whileHover={{ scale: 1.2, color: '#F472B6' }}
+            whileHover={{ scale: 1.2, color: "#F472B6" }}
             transition={{ duration: 0.3 }}
             className="inline-block"
           >

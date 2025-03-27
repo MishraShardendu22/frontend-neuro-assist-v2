@@ -1,9 +1,16 @@
-import { AlertTriangle, ChevronRight } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { AlertTriangle, ChevronRight } from "lucide-react";
 import { PatientDetailsType } from "@/Types/Patient.types";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 interface SymptomsFormProps {
   prevTab: () => void;
@@ -12,21 +19,33 @@ interface SymptomsFormProps {
   handleCheckboxChange: (symptom: string, checked: boolean) => void;
 }
 
-const SymptomsForm: React.FC<SymptomsFormProps> = ({ 
-  patientDetails, 
-  handleCheckboxChange, 
-  prevTab, 
-  nextTab 
+const SymptomsForm: React.FC<SymptomsFormProps> = ({
+  patientDetails,
+  handleCheckboxChange,
+  prevTab,
+  nextTab,
 }) => {
+  const navigate = useNavigate();
+
   const formatSymptomName = (name: string) => {
-    return name.replace(/([A-Z])/g, ' $1').trim();
+    return name.replace(/([A-Z])/g, " $1").trim();
   };
 
-  const selectedSymptomsCount = Object.values(patientDetails.symptoms).filter(Boolean).length;
+  const selectedSymptomsCount = Object.values(patientDetails.symptoms).filter(
+    Boolean
+  ).length;
   const totalSymptoms = Object.keys(patientDetails.symptoms).length;
-  
+
+  const checkSymptoms = () => {
+    if (selectedSymptomsCount === 0) {
+      navigate("/patient/NoStroke");
+    } else {
+      nextTab();
+    }
+  };
+
   return (
-    <>
+    <div>
       <Card className="border shadow-sm">
         <CardHeader className="pb-3">
           <CardTitle className="text-xl font-semibold">
@@ -82,13 +101,13 @@ const SymptomsForm: React.FC<SymptomsFormProps> = ({
           Back
         </Button>
         <Button
-          onClick={nextTab}
+          onClick={checkSymptoms}
           className="flex items-center gap-1 bg-primary"
         >
           Next <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 

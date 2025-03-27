@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AlertCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import Report from "./componenet/report";
 import TabsNavigation from "./componenet/tabs";
 import VitalSignsForm from "./componenet/vital";
 import SymptomsForm from "./componenet/symptoms";
 import UploadComponent from "./componenet/Upload";
+import React, { useState, useEffect } from "react";
 import { CardContent } from "@/components/ui/card";
 import ExclusionForm from "./componenet/ExclusionForm";
 import { PatientDetailsType } from "@/Types/Patient.types";
 import PatientDetailsForm from "./componenet/patientdetails";
-import Report from "./componenet/report";
 
 const Survey = () => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -106,21 +106,18 @@ const Survey = () => {
   }, [patientDetails]);
 
   return (
-    <div className="min-h-screen bg-background py-8 flex justify-center">
-      <CardContent className="p-6 w-full max-w-6xl">
-        {" "}
-        {/* Increased to max-w-6xl */}
+    <main className="flex-grow container mx-auto px-4 py-8">
+      <CardContent className="p-6 w-full max-w-6xl mx-auto">
         <div className="flex items-center mb-4">
           <AlertCircle className="h-6 w-6 mr-2 text-red-500" />
           <h1 className="text-2xl font-bold">Stroke Assessment Form</h1>
         </div>
         <p className="text-muted-foreground mb-6">
-          Complete the following information to assess stroke risk and determine
-          appropriate interventions.
+          Complete the following information to assess stroke risk and
+          determine appropriate interventions.
         </p>
         <TabsNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="mt-6">
-          {/* 1.) Personal Details is the 1st Tab */}
           {activeTab === "personal" && (
             <PatientDetailsForm
               patientDetails={patientDetails}
@@ -128,7 +125,6 @@ const Survey = () => {
               nextTab={() => setActiveTab("vitals")}
             />
           )}
-          {/* 2.) Vitals is 2nd Tab */}
           {activeTab === "vitals" && (
             <VitalSignsForm
               patientDetails={patientDetails}
@@ -137,7 +133,6 @@ const Survey = () => {
               prevTab={() => setActiveTab("personal")}
             />
           )}
-          {/* 3.) Symptoms is 3rd Tab */}
           {activeTab === "symptoms" && (
             <SymptomsForm
               patientDetails={patientDetails}
@@ -146,7 +141,6 @@ const Survey = () => {
               prevTab={() => setActiveTab("vitals")}
             />
           )}
-          {/* 4.) Exclusion is 4th Tab */}
           {activeTab === "exclusion" && (
             <ExclusionForm
               patientDetails={patientDetails}
@@ -155,20 +149,18 @@ const Survey = () => {
               prevTab={() => setActiveTab("symptoms")}
             />
           )}
-          {/* 5.) Upload Page is the 5th Tab */}
           {activeTab === "upload" && (
             <UploadComponent
               nextTab={() => setActiveTab("reports")}
               prevTab={() => setActiveTab("exclusion")}
             />
           )}
-          {/* 6.) Report is 6th Tab */}
           {activeTab === "reports" && (
             <Report prevTab={() => setActiveTab("upload")} />
           )}
         </div>
       </CardContent>
-    </div>
+    </main>
   );
 };
 
