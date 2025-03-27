@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Report from "./componenet/Report";
 import { AlertCircle } from "lucide-react";
-import Report from "./componenet/report";
-import TabsNavigation from "./componenet/tabs";
-import VitalSignsForm from "./componenet/vital";
-import SymptomsForm from "./componenet/symptoms";
+import { useEffect, useState } from "react";
+import TabsNavigation from "./componenet/Tabs";
+import VitalSignsForm from "./componenet/Vital";
+import SymptomsForm from "./componenet/Symptoms";
 import UploadComponent from "./componenet/Upload";
-import React, { useState, useEffect } from "react";
 import { CardContent } from "@/components/ui/card";
 import ExclusionForm from "./componenet/ExclusionForm";
 import { PatientDetailsType } from "@/Types/Patient.types";
-import PatientDetailsForm from "./componenet/patientdetails";
+import PatientDetailsForm from "./componenet/Patientdetails";
+
 
 const Survey = () => {
   const [activeTab, setActiveTab] = useState("personal");
