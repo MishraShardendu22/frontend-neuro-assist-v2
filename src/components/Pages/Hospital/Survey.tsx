@@ -1,23 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import toast from "react-hot-toast";
 import { AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import TabsNavigation from "./componenet/tabs";
 import VitalSignsForm from "./componenet/vital";
-import axiosInstance from "@/lib/axiosInstance";
 import SymptomsForm from "./componenet/symptoms";
 import UploadComponent from "./componenet/Upload";
 import { CardContent } from "@/components/ui/card";
-import { PatientStore } from "@/store/patient.store";
 import ExclusionForm from "./componenet/ExclusionForm";
 import { PatientDetailsType } from "@/Types/Patient.types";
 import PatientDetailsForm from "./componenet/patientdetails";
 import Report from "./componenet/report";
 
 const Survey = () => {
-  const navigate = useNavigate();
-  const { setPatient } = PatientStore();
   const [activeTab, setActiveTab] = useState("personal");
   const [patientDetails, setPatientDetails] = useState<PatientDetailsType>({
     patientDOB: "1972-05-14",
@@ -105,66 +99,6 @@ const Survey = () => {
         };
       }
     });
-  };
-
-  const handleSubmit = async () => {
-    try {
-      console.log("Submitting patient details:", patientDetails);
-      const res = await axiosInstance.post("/patient/register", patientDetails);
-
-      if (res.status === 200) {
-        toast.success("Patient Details Registered Successfully");
-        setPatient(patientDetails);
-
-        const lastKnownNormalDate = new Date(
-          patientDetails.patientLastKnownNormal
-        );
-        if (isNaN(lastKnownNormalDate.getTime())) {
-          toast.error("Invalid date format for last known normal time.");
-          return;
-        }
-
-        const twentyFourHoursAgo = new Date();
-        twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
-
-        if (
-          !(
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours
-              .pradaxa ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours
-              .xarelto ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours
-              .apixaban ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours
-              .coumadin ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours
-              .edoxaban ||
-            patientDetails.exclusionList.anticoagulantMedicationsLast48Hours
-              .therapeuticLovenox ||
-            patientDetails.exclusionList.gastrointestinalBleedLast21Days ||
-            patientDetails.exclusionList.historyIntracranialHemorrhage ||
-            patientDetails.exclusionList
-              .intracranialIntraspinalSurgeryLast3Months
-          )
-        ) {
-          navigate("/patient/NoStroke");
-          return;
-        }
-
-        if (lastKnownNormalDate < twentyFourHoursAgo) {
-          navigate("/patient/generalAssessment");
-        } else {
-          if (!Object.values(patientDetails.symptoms).includes(true)) {
-            navigate("/patient/thrombectomy");
-          } else {
-            navigate("/patient/thrombolysis");
-          }
-        }
-      }
-    } catch (error) {
-      toast.error("Error registering patient details");
-      console.error("Submission error:", error);
-    }
   };
 
   useEffect(() => {

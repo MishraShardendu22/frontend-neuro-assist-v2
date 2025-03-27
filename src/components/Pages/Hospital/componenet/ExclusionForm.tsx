@@ -1,28 +1,32 @@
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { toast } from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import axiosInstance from "@/lib/axiosInstance";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
 import { ChevronLeft, ChevronRight, ShieldAlert } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+import { PatientStore } from "@/store/patient.store";
+import { PatientDetailsType } from "@/Types/Patient.types";
 
 interface ExclusionFormProps {
-  patientDetails: {
-    exclusionList: {
-      intracranialIntraspinalSurgeryLast3Months: boolean;
-      gastrointestinalBleedLast21Days: boolean;
-      historyIntracranialHemorrhage: boolean;
-      anticoagulantMedicationsLast48Hours: Record<string, boolean>;
-    };
-  };
+  patientDetails: PatientDetailsType
   handleCheckboxChange: (key: string, value: boolean) => void;
   nextTab: () => void;
   prevTab: () => void;
 }
 
 const ExclusionForm: React.FC<ExclusionFormProps> = ({
-  patientDetails,
   handleCheckboxChange,
+  patientDetails,
   nextTab,
   prevTab,
 }) => {
@@ -30,9 +34,26 @@ const ExclusionForm: React.FC<ExclusionFormProps> = ({
     !patientDetails.exclusionList.intracranialIntraspinalSurgeryLast3Months &&
     !patientDetails.exclusionList.gastrointestinalBleedLast21Days &&
     !patientDetails.exclusionList.historyIntracranialHemorrhage &&
-    Object.values(patientDetails.exclusionList.anticoagulantMedicationsLast48Hours).every(
-      (value) => !value
-    );
+    Object.values(
+      patientDetails.exclusionList.anticoagulantMedicationsLast48Hours
+    ).every((value) => !value);
+    
+  const setPatientDetails = PatientStore((state) => state.setPatient);
+  
+  const handleSubmit = async () => {
+    try {
+      await axiosInstance.post("/patient/register", {
+        ...patientDetails,
+      });
+      setPatientDetails(patientDetails);
+      toast.success("Patient registered successfully");
+    } catch (error) {
+      console.error("Error registering patient:", error);
+      toast.error("Failed to register patient");
+    }
+  };
+
+
 
   return (
     <Card className="border-2 border-primary/20 shadow-md">
@@ -59,9 +80,15 @@ const ExclusionForm: React.FC<ExclusionFormProps> = ({
           <div className="flex items-center space-x-2">
             <Checkbox
               id="intracranialIntraspinalSurgeryLast3Months"
-              checked={patientDetails.exclusionList.intracranialIntraspinalSurgeryLast3Months}
+              checked={
+                patientDetails.exclusionList
+                  .intracranialIntraspinalSurgeryLast3Months
+              }
               onCheckedChange={(checked) =>
-                handleCheckboxChange("intracranialIntraspinalSurgeryLast3Months", checked as boolean)
+                handleCheckboxChange(
+                  "intracranialIntraspinalSurgeryLast3Months",
+                  checked as boolean
+                )
               }
             />
             <Label
@@ -75,9 +102,14 @@ const ExclusionForm: React.FC<ExclusionFormProps> = ({
           <div className="flex items-center space-x-2">
             <Checkbox
               id="gastrointestinalBleedLast21Days"
-              checked={patientDetails.exclusionList.gastrointestinalBleedLast21Days}
+              checked={
+                patientDetails.exclusionList.gastrointestinalBleedLast21Days
+              }
               onCheckedChange={(checked) =>
-                handleCheckboxChange("gastrointestinalBleedLast21Days", checked as boolean)
+                handleCheckboxChange(
+                  "gastrointestinalBleedLast21Days",
+                  checked as boolean
+                )
               }
             />
             <Label
@@ -91,9 +123,14 @@ const ExclusionForm: React.FC<ExclusionFormProps> = ({
           <div className="flex items-center space-x-2">
             <Checkbox
               id="historyIntracranialHemorrhage"
-              checked={patientDetails.exclusionList.historyIntracranialHemorrhage}
+              checked={
+                patientDetails.exclusionList.historyIntracranialHemorrhage
+              }
               onCheckedChange={(checked) =>
-                handleCheckboxChange("historyIntracranialHemorrhage", checked as boolean)
+                handleCheckboxChange(
+                  "historyIntracranialHemorrhage",
+                  checked as boolean
+                )
               }
             />
             <Label
@@ -111,34 +148,47 @@ const ExclusionForm: React.FC<ExclusionFormProps> = ({
           </h3>
           <Separator className="my-2" />
           <div className="space-y-3">
-            {Object.entries(patientDetails.exclusionList.anticoagulantMedicationsLast48Hours).map(
-              ([key, value]) => (
-                <div key={key} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`anticoagulant-${key}`}
-                    checked={value}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange(`anticoagulantMedicationsLast48Hours.${key}`, checked as boolean)
-                    }
-                  />
-                  <Label
-                    htmlFor={`anticoagulant-${key}`}
-                    className="text-base font-normal capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {key.replace(/([A-Z])/g, " $1").trim()}
-                  </Label>
-                </div>
-              )
-            )}
+            {Object.entries(
+              patientDetails.exclusionList.anticoagulantMedicationsLast48Hours
+            ).map(([key, value]) => (
+              <div key={key} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`anticoagulant-${key}`}
+                  checked={value}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange(
+                      `anticoagulantMedicationsLast48Hours.${key}`,
+                      checked as boolean
+                    )
+                  }
+                />
+                <Label
+                  htmlFor={`anticoagulant-${key}`}
+                  className="text-base font-normal capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {key.replace(/([A-Z])/g, " $1").trim()}
+                </Label>
+              </div>
+            ))}
           </div>
         </div>
       </CardContent>
 
       <CardFooter className="flex justify-between pt-2 pb-4">
-        <Button variant="outline" onClick={prevTab} className="flex items-center gap-1">
+        <Button
+          variant="outline"
+          onClick={prevTab}
+          className="flex items-center gap-1"
+        >
           <ChevronLeft className="h-4 w-4" /> Back
         </Button>
-        <Button onClick={nextTab} className="flex items-center gap-1 bg-primary">
+        <Button
+          onClick={() => {
+            handleSubmit();
+            nextTab();
+          }}
+          className="flex items-center gap-1 bg-primary"
+        >
           Next <ChevronRight className="h-4 w-4" />
         </Button>
       </CardFooter>

@@ -1,20 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { PickerOverlay } from "filestack-react";
 import axiosInstance from "@/lib/axiosInstance";
 import { PatientStore } from "@/store/patient.store";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Upload,
   File,
@@ -24,13 +17,24 @@ import {
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 
 interface ThrombectomyProps {
   nextTab: () => void;
   prevTab: () => void;
+  handleSubmit?: () => void;
 }
 
-const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
+const UploadComponent: React.FC<ThrombectomyProps> = ({
+  nextTab,
+  prevTab,
+}) => {
   const patient = PatientStore((state) => state.patient);
   const patientEmail = patient?.patientEmail;
 
@@ -69,19 +73,23 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
       );
       return;
     }
-
+    
     try {
-      await axiosInstance.put("/patient/sendDocument", {
-        email: patientEmail,
-        documentName,
-        documentUrl,
-      });
+      await axiosInstance.put("/patient/sendDocument", 
+        {
+          documentUrl,
+          patientEmail,
+          documentName,
+        }
+      );
+
+      console.log(documentUrl);
+      console.log(documentName);
+      console.log(patientEmail);
 
       setDocumentUrl("");
       setDocumentName("");
       toast.success("Document sent successfully");
-
-      nextTab();
     } catch (error) {
       console.error(error);
       toast.error("Failed to send document");
