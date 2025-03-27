@@ -208,8 +208,8 @@ const Survey = () => {
             <SymptomsForm
               patientDetails={patientDetails}
               handleCheckboxChange={handleCheckboxChange}
-              prevTab={() => setActiveTab("exclusion")}
-              handleSubmit={handleSubmit}
+              nextTab={() => setActiveTab("exclusion")}
+              prevTab={() => setActiveTab("vitals")}
             />
           )}
           {/* 4.) Exclusion is 4th Tab */}
