@@ -1,5 +1,3 @@
-import React from "react";
-
 export const MedicalFooter = () => {
   const currentYear = new Date().getFullYear();
 
