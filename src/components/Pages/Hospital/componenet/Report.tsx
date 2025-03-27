@@ -12,7 +12,7 @@ const Report: React.FC<reportProps> = ({
 }) => {
   return (
     <div>
-      Report
+      
       <CardFooter className="flex justify-between pt-2 pb-4">
         <Button
           variant="outline"

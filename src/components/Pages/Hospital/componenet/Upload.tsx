@@ -24,6 +24,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 interface ThrombectomyProps {
   nextTab: () => void;
@@ -125,6 +126,12 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
             </div>
           )}
         </CardHeader>
+
+        <DropdownMenu>
+          <DropdownMenuItem>Hemorrhage</DropdownMenuItem>
+          <DropdownMenuItem>No Hemorrhage</DropdownMenuItem>
+          <DropdownMenuItem>large vessel occlusion / abrupt cut-off</DropdownMenuItem>
+        </DropdownMenu>
 
         <CardContent className="space-y-6 p-6">
           {!patientEmail && (

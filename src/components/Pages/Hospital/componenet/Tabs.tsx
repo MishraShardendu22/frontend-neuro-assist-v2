@@ -1,11 +1,10 @@
 import { cn } from "@/lib/utils";
 import {
-  AlertCircle,
-  FileCheck2Icon,
-  FormInputIcon,
+  User,
   Heart,
   Upload,
-  User,
+  AlertCircle,
+  FormInputIcon,
 } from "lucide-react";
 
 interface TabsNavigationProps {
@@ -39,11 +38,6 @@ const TabsNavigation = ({ activeTab, setActiveTab }: TabsNavigationProps) => {
       id: "upload",
       label: "5.) Upload",
       icon: <Upload className="h-6 w-6" />,
-    },
-    {
-      id: "reports",
-      label: "6.) Reports",
-      icon: <FileCheck2Icon className="h-6 w-6" />,
     },
   ];
 
