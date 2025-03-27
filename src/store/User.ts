@@ -7,10 +7,12 @@ interface UserState {
   resetUser: () => void;
 }
 
-export const useUserStore = create<UserState>((set) => (
+export const useUserStore = create<UserState>((set) => 
+  (
     {
-        user: null,
-        setUser: (user) => set({ user }),
-        resetUser: () => set({ user: null }),
+      user: null,
+      setUser: (user) => set({ user }),
+      resetUser: () => set({ user: null }),
     }
-));
+  )
+);

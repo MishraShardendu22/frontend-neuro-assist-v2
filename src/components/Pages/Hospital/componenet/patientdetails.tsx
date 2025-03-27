@@ -69,7 +69,7 @@ const PatientDetailsForm: React.FC<PatientDetailsFormProps> = ({
                 type="date" 
                 className="pl-10"
                 value={patientDetails.patientDOB} 
-                onChange={handleChange} 
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -86,6 +86,7 @@ const PatientDetailsForm: React.FC<PatientDetailsFormProps> = ({
                 id="patientLastKnownNormal"
                 type="datetime-local"
                 name="patientLastKnownNormal" 
+                defaultValue={new Date().toISOString()}
                 value={patientDetails.patientLastKnownNormal} 
                 onChange={handleChange}
                 className="border-none focus-visible:ring-0 pl-2"

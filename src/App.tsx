@@ -1,15 +1,15 @@
 import Layout from "./Layout";
 import Theme from "./store/ThemeStore";
-import Home from "./components/Pages/Home/Home";
+import Home from "./components/LandingPage/LandingPage";
 import { Route, Routes } from "react-router-dom";
-import NotFound from "./components/Pages/Not-Found";
-import Survey from "./components/Pages/Hospital/Survey/Survey";
-import Thrombolysis from "./components/Pages/Hospital/Survey/Assesment/Treatment/Thrombolysis";
-import Thrombectomy from "./components/Pages/Hospital/Survey/Assesment/Treatment/Thrombectomy";
-import { GeneralAssesment } from "./components/Pages/Hospital/Survey/Assesment/general.assesment";
-import AutomatedCTReportAnalysis from "./components/Pages/Hospital/Survey/Assesment/Analysis";
-import AnalyseReport from "./components/Pages/Hospital/Survey/Assesment/AnalyseReport";
 import NoStroke from "./components/Pages/NoStroke";
+import NotFound from "./components/Pages/Not-Found";
+import Survey from "./components/Pages/Hospital/Survey";
+import AnalyseReport from "./components/Pages/Hospital/Assesment/AnalyseReport";
+import AutomatedCTReportAnalysis from "./components/Pages/Hospital/Assesment/Analysis";
+import Thrombolysis from "./components/Pages/Hospital/Assesment/Treatment/Thrombolysis";
+import Thrombectomy from "./components/Pages/Hospital/Assesment/Treatment/Thrombectomy";
+import { GeneralAssesment } from "./components/Pages/Hospital/Assesment/general.assesment";
 
 const App = () => {
   return (
