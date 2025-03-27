@@ -11,7 +11,6 @@ import ExclusionForm from "./componenet/ExclusionForm";
 import { PatientDetailsType } from "@/Types/Patient.types";
 import PatientDetailsForm from "./componenet/Patientdetails";
 
-
 const Survey = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const [patientDetails, setPatientDetails] = useState<PatientDetailsType>({
