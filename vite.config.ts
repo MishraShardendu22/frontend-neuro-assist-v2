@@ -11,7 +11,7 @@ export default defineConfig({
     VitePWA({
       strategies: 'generateSW',
       registerType: 'autoUpdate',
-            injectRegister: 'auto',
+      injectRegister: 'auto',
       pwaAssets: { disabled: false, config: true, htmlPreset: '2023', overrideManifestIcons: true },
       manifest: {
         name: "Neuro Assist",
@@ -41,13 +41,14 @@ export default defineConfig({
           },
         ],
       },
-workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
+        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024, // Increase limit to 15MB
       },
       injectManifest: {
-        globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
       },
       devOptions: {
         enabled: false,
@@ -56,7 +57,6 @@ workbox: {
         type: 'module',
       },
     })
-
   ],
   resolve: {
     alias: {
