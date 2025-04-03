@@ -5,6 +5,8 @@
     "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "types": ["vite-plugin-pwa/client"],
+
 
     /* Bundler mode */
     "moduleResolution": "bundler",

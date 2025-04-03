@@ -9,8 +9,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: "autoUpdate",
-      injectRegister: false,
+      strategies: 'generateSW',
+      registerType: 'autoUpdate',
+            injectRegister: 'auto',
+      pwaAssets: { disabled: false, config: true, htmlPreset: '2023', overrideManifestIcons: true },
       manifest: {
         name: "Neuro Assist",
         short_name: "Neuro Assist",
@@ -39,22 +41,22 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,png,ico}"], // Removed duplicate "svg"
+workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // Increase cache limit if needed
       },
       injectManifest: {
-        globPatterns: ["**/*.{js,css,html,png,ico}"], // Removed duplicate "svg"
+        globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
       },
       devOptions: {
         enabled: false,
-        navigateFallback: "index.html",
+        navigateFallback: 'index.html',
         suppressWarnings: true,
-        type: "module",
+        type: 'module',
       },
-    }),
+    })
+
   ],
   resolve: {
     alias: {

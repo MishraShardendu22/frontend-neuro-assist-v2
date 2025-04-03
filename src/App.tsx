@@ -27,8 +27,14 @@ const App = () => {
         <Route path="/patient/thrombectomy" element={<Thrombectomy />} />
         <Route path="/patient/thrombolysis" element={<Thrombolysis />} />
         <Route path="/patient/sendAnalysis" element={<AnalyseReport />} />
-        <Route path="/patient/generalAssessment" element={<GeneralAssesment />} />
-        <Route path="/patient/allReports" element={<AutomatedCTReportAnalysis />} />
+        <Route
+          path="/patient/generalAssessment"
+          element={<GeneralAssesment />}
+        />
+        <Route
+          path="/patient/allReports"
+          element={<AutomatedCTReportAnalysis />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Theme />
