@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [VitePWA({
       strategies: 'generateSW',
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       injectRegister: false,
       pwaAssets: { disabled: false, config: true, htmlPreset: '2023', overrideManifestIcons: true },
       manifest: {
