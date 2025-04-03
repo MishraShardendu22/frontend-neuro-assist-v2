@@ -16,6 +16,7 @@ import {
   Send,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
 } from "lucide-react";
 import {
   Card,
@@ -24,7 +25,14 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 interface ThrombectomyProps {
   nextTab: () => void;
@@ -35,6 +43,8 @@ interface ThrombectomyProps {
 const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
   const patient = PatientStore((state) => state.patient);
   const patientEmail = patient?.patientEmail;
+
+  const navigate = useNavigate();
 
   const [documentUrl, setDocumentUrl] = useState("");
   const [documentName, setDocumentName] = useState("");
@@ -79,10 +89,6 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
         documentName,
       });
 
-      console.log(documentUrl);
-      console.log(documentName);
-      console.log(patientEmail);
-
       setDocumentUrl("");
       setDocumentName("");
       toast.success("Document sent successfully");
@@ -111,6 +117,44 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
     setIsPickerOverlayVisible(true);
   };
 
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+const selectCategory = async () => {
+  enum PatientConditionEnum {
+    HEMORRHAGE = "hemorrhage",
+    NO_HEMORRHAGE = "no_hemorrhage",
+    LARGE_VESSEL_OCCLUSION = "large_vessel_occlusion",
+  }
+
+  if (selectedOption) {
+    const patientCondition =
+      selectedOption === "Hemorrhage"
+        ? PatientConditionEnum.HEMORRHAGE
+        : selectedOption === "No Hemorrhage"
+        ? PatientConditionEnum.NO_HEMORRHAGE
+        : PatientConditionEnum.LARGE_VESSEL_OCCLUSION;
+
+    try {
+      await axiosInstance.put("/patient/tellCondition", {
+        patientEmail,
+        patientCondition,
+      });
+
+      if (patientCondition === PatientConditionEnum.HEMORRHAGE) {
+        navigate("/patient/hemorrhage");
+      } else if (patientCondition === PatientConditionEnum.NO_HEMORRHAGE) {
+        navigate("/patient/no-hemorrhage");
+      } else {
+        navigate("/patient/occlusionclot");
+      }
+    } catch (error) {
+      toast.error("Failed to update patient condition");
+      console.error(error);
+    }
+  }
+};
+
+
   return (
     <div className="px-4 py-6">
       <Card className="w-full max-w-4xl mx-auto border-t-4 border-t-primary shadow-lg rounded-lg overflow-hidden dark:bg-card dark:border-t-primary/80">
@@ -126,11 +170,29 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
             </div>
           )}
         </CardHeader>
-
         <DropdownMenu>
-          <DropdownMenuItem>Hemorrhage</DropdownMenuItem>
-          <DropdownMenuItem>No Hemorrhage</DropdownMenuItem>
-          <DropdownMenuItem>large vessel occlusion / abrupt cut-off</DropdownMenuItem>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="flex items-center gap-2">
+              {selectedOption || "Select Condition"}
+              <ChevronDown className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Select Condition</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => setSelectedOption("Hemorrhage")}>
+              Hemorrhage
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setSelectedOption("No Hemorrhage")}
+            >
+              No Hemorrhage
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setSelectedOption("Large vessel occlusion")}
+            >
+              Large vessel occlusion / abrupt cut-off
+            </DropdownMenuItem>
+          </DropdownMenuContent>
         </DropdownMenu>
 
         <CardContent className="space-y-6 p-6">
@@ -198,7 +260,6 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
             )}
           </div>
         </CardContent>
-
         <CardFooter className="flex flex-col sm:flex-row justify-between border-t border-border pt-4 px-6 pb-6 bg-muted/30">
           <div className="flex w-full justify-between items-center space-x-4">
             <Button
@@ -224,20 +285,24 @@ const UploadComponent: React.FC<ThrombectomyProps> = ({ nextTab, prevTab }) => {
                   <Send className="h-4 w-4" />
                   Send Document
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={nextTab}
-                  className="flex items-center gap-2 w-full sm:w-auto"
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                {selectedOption && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      selectCategory();
+                      nextTab();
+                    }}
+                    className="flex items-center gap-2 w-full sm:w-auto"
+                  >
+                    Process Report
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                )}
               </form>
             </div>
           </div>
         </CardFooter>
-
         {isPickerOverlayVisible && (
           <PickerOverlay
             apikey={import.meta.env.VITE_FILESTACK_API_KEY as string}

@@ -14,9 +14,9 @@ import PatientDetailsForm from "./componenet/Patientdetails";
 const Survey = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const [patientDetails, setPatientDetails] = useState<PatientDetailsType>({
+    patientWeight: "68",
     patientDOB: "1972-05-14",
     patientEmail: "janedoe@example.com",
-    patientWeight: "68",
     patientMedicalHistory: "Hypertension, High Cholesterol",
     patientLastKnownNormal: "",
     vitalSigns: {

@@ -10,6 +10,9 @@ import AutomatedCTReportAnalysis from "./components/Pages/Hospital/Assesment/Ana
 import Thrombolysis from "./components/Pages/Hospital/Assesment/Treatment/Thrombolysis";
 import Thrombectomy from "./components/Pages/Hospital/Assesment/Treatment/Thrombectomy";
 import { GeneralAssesment } from "./components/Pages/Hospital/Assesment/general.assesment";
+import Hemorrhage from "./components/Pages/StrokeClassification/Hemorrhage";
+import NoHemorrhage from "./components/Pages/StrokeClassification/NoHemorrhage";
+import Occulsion from "./components/Pages/StrokeClassification/Occulsion";
 
 const App = () => {
   return (
@@ -17,11 +20,14 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/patient/survey" element={<Survey />} />
+        <Route path="/patient/clot" element={<Occulsion />} />
+        <Route path="/patient/NoStroke" element={<NoStroke />} />
+        <Route path="/patient/hemmorage" element={<Hemorrhage />} />
+        <Route path="/patient/nohemmorage" element={<NoHemorrhage />} />
         <Route path="/patient/thrombectomy" element={<Thrombectomy />} />
         <Route path="/patient/thrombolysis" element={<Thrombolysis />} />
         <Route path="/patient/sendAnalysis" element={<AnalyseReport />} />
         <Route path="/patient/generalAssessment" element={<GeneralAssesment />} />
-        <Route path="/patient/NoStroke" element={<NoStroke />} />
         <Route path="/patient/allReports" element={<AutomatedCTReportAnalysis />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
